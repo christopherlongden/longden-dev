@@ -22,10 +22,19 @@ export const firestore = firebase.firestore();
 export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
     const collectionRef = firestore.collection(collectionKey);
 
+    // TODO - Could do this with a batch since it's multiple documents
+    // and it should be a transaction
     objectsToAdd.forEach(obj => {
         const newDocRef = collectionRef.doc();
         newDocRef.set(obj);
     })
+}
+
+export const addDocument = async (collectionKey, obj) => {
+    const collectionRef = firestore.collection(collectionKey);
+
+    const newDocRef = collectionRef.doc();
+    newDocRef.set(obj);
 }
 
 export const convertGroupSnapshotToMap = groups => {

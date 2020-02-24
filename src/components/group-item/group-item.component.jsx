@@ -1,10 +1,13 @@
 import React from 'react';
 
-import GroupItemContainer from './group-item.styles'
+import { GroupItemContainer } from './group-item.styles'
 
 const GroupItem = ({ name, imageUrl }) => (
     <GroupItemContainer>
-        <div><img alt="" src={imageUrl}/>{name}</div>
+        <div>
+            <img alt="" src={imageUrl}></img>
+            <span>{name}</span>
+        </div>
     </GroupItemContainer>
 );
 

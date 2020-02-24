@@ -16,6 +16,8 @@ import HomePageContainer from './homepage.styles'
 class HomePage extends React.Component {
     unsubscribeFromGroupSnapshot = null;
     
+    // TODO: maybe I should move this into the redux layer
+    // for now I will leave it as is as homepage always fires
     componentDidMount() {
         const { updateGroups } = this.props;
         const groupRef = firestore.collection('group');
@@ -33,10 +35,10 @@ class HomePage extends React.Component {
     render() {
         return (
             <HomePageContainer>
-            <span>Group Directory:</span>
-            <GroupList/>
-            <span>Create Group:</span>
-            <CreateGroup/>
+                <h3>Group Directory</h3>
+                <GroupList/>
+                <h3>Create Group</h3>
+                <CreateGroup/>
             </HomePageContainer>
         )
     }
