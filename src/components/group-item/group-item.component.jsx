@@ -1,14 +1,20 @@
 import React from 'react';
 
-import { GroupItemContainer } from './group-item.styles'
+import { GroupItemContainer, GroupLink } from './group-item.styles'
 
-const GroupItem = ({ name, imageUrl }) => (
-    <GroupItemContainer>
-        <div>
-            <img alt="" src={imageUrl}></img>
-            <span>{name}</span>
-        </div>
-    </GroupItemContainer>
-);
+const GroupItem = ({ location, name, imageUrl }) => {
+    return (
+        <GroupItemContainer>
+            <div>
+                <img alt="" src={imageUrl}></img>
+                <span>
+                    <GroupLink to={location}>{name}</GroupLink>
+                </span>
+            </div>
+        </GroupItemContainer>
+    );
+}
+
+
 
 export default GroupItem;

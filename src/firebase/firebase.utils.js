@@ -44,7 +44,8 @@ export const convertGroupSnapshotToMap = groups => {
         return {
             id,
             name,
-            imageUrl
+            imageUrl,
+            location: "/group/" + id
         }
     });
 
