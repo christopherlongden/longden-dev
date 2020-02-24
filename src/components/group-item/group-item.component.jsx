@@ -4,7 +4,7 @@ import GroupItemContainer from './group-item.styles'
 
 const GroupItem = ({ name, imageUrl }) => (
     <GroupItemContainer>
-        <div>{name}</div>
+        <div><img alt="" src={imageUrl}/>{name}</div>
     </GroupItemContainer>
 );
 
