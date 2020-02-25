@@ -20,7 +20,7 @@ class HomePage extends React.Component {
     // for now I will leave it as is as homepage always fires
     componentDidMount() {
         const { updateGroups } = this.props;
-        const groupRef = firestore.collection('group');
+        const groupRef = firestore.collection('group').orderBy('name', 'asc');
 
         this.unsubscribeFromGroupSnapshot = groupRef.onSnapshot(snapshot => {
             const groupsMap = convertGroupSnapshotToMap(snapshot);

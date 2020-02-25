@@ -41,7 +41,7 @@ class CreateGroup extends React.Component {
     render() {
         return (
             <CreateGroupContainer>
-                <Form onSubmit={this.handleSubmit} autocomplete="off">
+                <Form onSubmit={this.handleSubmit} autoComplete="off">
                     <Form.Group>
                         <Form.Label>Group name</Form.Label>
                         <Form.Control type="text" name="groupName" value={this.state.groupName} onChange={this.handleChange} placeholder="Enter group name" />

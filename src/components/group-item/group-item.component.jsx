@@ -15,6 +15,4 @@ const GroupItem = ({ location, name, imageUrl }) => {
     );
 }
 
-
-
 export default GroupItem;
