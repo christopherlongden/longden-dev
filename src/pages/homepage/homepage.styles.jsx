@@ -8,6 +8,11 @@ export const HomePageContainer = styled.div`
     & h3 {
         margin-top:20px;
     }
+
+    & .toggle-box {
+        margin-top:20px;
+        margin-bottom:20px;
+    }
 `;
 
 export default HomePageContainer;

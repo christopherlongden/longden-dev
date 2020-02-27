@@ -1,10 +1,8 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
+import { v4 as uuidv4 } from 'uuid';
+import { addDocument } from '../../firebase/firebase.utils.js';
 import GroupList from '../../components/group-list/group-list.component'
 import CreateGroup from '../../components/create-group/create-group.component'
-
-import { updateGroups } from '../../redux/group/group.actions';
 
 import {
     firestore,
@@ -16,15 +14,42 @@ import HomePageContainer from './homepage.styles'
 class HomePage extends React.Component {
     unsubscribeFromGroupSnapshot = null;
     
-    // TODO: maybe I should move this into the redux layer
-    // for now I will leave it as is as homepage always fires
+    constructor() {
+        super();
+
+        this.state = {
+            groups: [],
+            newGroupName: '',
+            newGroupImageUrl: ''
+        }
+    }
+
+    handleSubmit = async event => {
+        event.preventDefault();
+
+        const id = uuidv4();
+        const { newGroupName, newGroupImageUrl } = this.state;
+        const newGroup = { id, name: newGroupName, newGroupImageUrl};
+        
+        await addDocument('group', newGroup);
+        this.setState({ newGroupName: '', newGroupImageUrl: '' })
+    }
+
+    isFormValid = () => {
+        const { newGroupName, newGroupImageUrl } = this.state;
+        return newGroupName.length > 4 && newGroupImageUrl.length > 5;
+    }
+
+    handleChange = event => {
+        const { name, value } = event.target;
+        this.setState({ [name]: value });
+    };
+    
     componentDidMount() {
-        const { updateGroups } = this.props;
         const groupRef = firestore.collection('group').orderBy('name', 'asc');
 
         this.unsubscribeFromGroupSnapshot = groupRef.onSnapshot(snapshot => {
-            const groupsMap = convertGroupSnapshotToMap(snapshot);
-            updateGroups(groupsMap);
+            this.setState ( { groups: convertGroupSnapshotToMap(snapshot) });
         });
     }
 
@@ -33,20 +58,16 @@ class HomePage extends React.Component {
     }
 
     render() {
+        const { groups } = this.state;
         return (
             <HomePageContainer>
                 <h3>Group Directory</h3>
-                <GroupList/>
+                <GroupList groups={groups}/>
                 <h3>Create Group</h3>
-                <CreateGroup/>
+                <CreateGroup handleSubmit={this.handleSubmit} handleChange={this.handleChange} isFormValid={this.isFormValid}/>
             </HomePageContainer>
         )
     }
 };
 
-const mapDispatchToProps = dispatch => ({
-    updateGroups: groups =>
-        dispatch(updateGroups(groups))
-})
-
-export default connect(null, mapDispatchToProps)(HomePage);
+export default HomePage;
