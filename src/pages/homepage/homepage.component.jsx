@@ -58,13 +58,18 @@ class HomePage extends React.Component {
     }
 
     render() {
-        const { groups } = this.state;
+        const { groups, newGroupImageUrl, newGroupName } = this.state;
         return (
             <HomePageContainer>
                 <h3>Group Directory</h3>
                 <GroupList groups={groups}/>
                 <h3>Create Group</h3>
-                <CreateGroup handleSubmit={this.handleSubmit} handleChange={this.handleChange} isFormValid={this.isFormValid}/>
+                <CreateGroup 
+                    groupName={newGroupName} 
+                    imageUrl={newGroupImageUrl} 
+                    handleSubmit={this.handleSubmit} 
+                    handleChange={this.handleChange} 
+                    isFormValid={this.isFormValid}/>
             </HomePageContainer>
         )
     }

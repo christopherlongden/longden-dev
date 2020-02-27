@@ -1,7 +1,5 @@
 import React from 'react';
 import GroupPageContainer from './grouppage.styles'
-import { connect } from 'react-redux';
-import { selectGroup } from '../../redux/group/group.selector';
 
 const GroupPage = ({ group }) => {
     
@@ -22,8 +20,4 @@ const GroupPage = ({ group }) => {
     )
 }
 
-const mapStateToProps = (state, ownProps) => ({
-    group: selectGroup(ownProps.match.params.id)(state)
-});
-
-export default connect(mapStateToProps)(GroupPage);
+export default GroupPage;
