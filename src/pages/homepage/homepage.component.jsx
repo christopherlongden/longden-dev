@@ -1,5 +1,4 @@
 import React from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { addDocument } from '../../firebase/firebase.utils.js';
 import GroupList from '../../components/group-list/group-list.component'
 import CreateGroup from '../../components/create-group/create-group.component'
@@ -19,6 +18,7 @@ class HomePage extends React.Component {
 
         this.state = {
             groups: [],
+            showAddGroup: false,
             newGroupName: '',
             newGroupImageUrl: ''
         }
@@ -27,12 +27,11 @@ class HomePage extends React.Component {
     handleSubmit = async event => {
         event.preventDefault();
 
-        const id = uuidv4();
         const { newGroupName, newGroupImageUrl } = this.state;
-        const newGroup = { id, name: newGroupName, newGroupImageUrl};
+        const newGroup = { name: newGroupName, imageUrl: newGroupImageUrl};
         
         await addDocument('group', newGroup);
-        this.setState({ newGroupName: '', newGroupImageUrl: '' })
+        this.setState({ newGroupName: '', newGroupImageUrl: '', showAddGroup: false })
     }
 
     isFormValid = () => {
@@ -44,6 +43,10 @@ class HomePage extends React.Component {
         const { name, value } = event.target;
         this.setState({ [name]: value });
     };
+
+    toggleCreateGroupVisbility = () => {
+        this.setState( { showAddGroup: !this.state.showAddGroup } )
+    }
     
     componentDidMount() {
         const groupRef = firestore.collection('group').orderBy('name', 'asc');
@@ -58,18 +61,27 @@ class HomePage extends React.Component {
     }
 
     render() {
-        const { groups, newGroupImageUrl, newGroupName } = this.state;
+        const { groups, newGroupImageUrl, newGroupName, showAddGroup } = this.state;
         return (
             <HomePageContainer>
                 <h3>Group Directory</h3>
                 <GroupList groups={groups}/>
-                <h3>Create Group</h3>
-                <CreateGroup 
-                    groupName={newGroupName} 
-                    imageUrl={newGroupImageUrl} 
-                    handleSubmit={this.handleSubmit} 
-                    handleChange={this.handleChange} 
-                    isFormValid={this.isFormValid}/>
+
+                <div className="toggle-box">
+                    <input type="button" onClick={this.toggleCreateGroupVisbility} value="Add New Group"/>
+                </div>
+                { showAddGroup ?
+                    <div>
+                        <h3>Create Group</h3>
+                        <CreateGroup 
+                            groupName={newGroupName} 
+                            imageUrl={newGroupImageUrl} 
+                            handleSubmit={this.handleSubmit} 
+                            handleChange={this.handleChange} 
+                            isFormValid={this.isFormValid}/>
+                    </div>
+                    :
+                    null }
             </HomePageContainer>
         )
     }

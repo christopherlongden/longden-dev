@@ -37,15 +37,18 @@ export const addDocument = async (collectionKey, obj) => {
     newDocRef.set(obj);
 }
 
+export const getDocument = async (collectionKey, docId) => {
+    // group => group.groups.find(x => x.id === collectionUrlParam)
+}
+
 export const convertGroupSnapshotToMap = groups => {
     const transformedGroups = groups.docs.map(doc => {
-        const { id, name, imageUrl } = doc.data();
+        const { name, imageUrl } = doc.data();
 
         return {
-            id,
+            id: doc.id,
             name,
-            imageUrl,
-            location: "/group/" + id
+            imageUrl
         }
     });
 

@@ -5,8 +5,8 @@ import GroupListContainer from './group-list.styles';
 const GroupsList = ({ groups }) => {
     return (
         <GroupListContainer>
-        {groups.map(({ id, ...otherGroupProps}) => (
-            <GroupItem key={id} {...otherGroupProps} />
+        {groups.map(item => (
+          <GroupItem key={item.id} group={item} />
         ))}
         </GroupListContainer>
     )
