@@ -1,6 +1,5 @@
 import React from 'react';
-
-import { GroupItemContainer, GroupLink } from './group-item.styles'
+import { GroupItemContainer, GroupLink } from './group-item.styles';
 
 const GroupItem = ({ group }) => {
     const { id, name, imageUrl } = group;

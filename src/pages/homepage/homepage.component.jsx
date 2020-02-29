@@ -1,10 +1,10 @@
 import React from 'react';
-import { addDocument } from '../../firebase/firebase.utils.js';
 import GroupList from '../../components/group-list/group-list.component'
 import CreateGroup from '../../components/create-group/create-group.component'
 
 import {
     firestore,
+    addDocument,
     convertGroupSnapshotToMap
   } from '../../firebase/firebase.utils.js';
 
@@ -78,7 +78,8 @@ class HomePage extends React.Component {
                             imageUrl={newGroupImageUrl} 
                             handleSubmit={this.handleSubmit} 
                             handleChange={this.handleChange} 
-                            isFormValid={this.isFormValid}/>
+                            isFormValid={this.isFormValid}
+                        />
                     </div>
                     :
                     null }

@@ -55,4 +55,19 @@ export const convertGroupSnapshotToMap = groups => {
     return transformedGroups;
 }
 
+export const convertNewsSnapshotToMap = news => {
+    const transformedItems = news.docs.map(doc => {
+        const { title, body, created } = doc.data();
+
+        return {
+            id: doc.id,
+            title,
+            body,
+            created
+        }
+    });
+
+    return transformedItems;
+}
+
 export default firebase;
