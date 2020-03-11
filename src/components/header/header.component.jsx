@@ -1,13 +1,18 @@
 import React from 'react';
-import { Navbar } from "react-bootstrap";
-import { Link } from 'react-router-dom';
+import { Navbar, Nav } from "react-bootstrap";
+import OptionLink from './header.styles';
 
 const Header = () => (
     <Navbar bg="light" expand="lg">
         <Navbar.Brand>
-            <Link to="/">Longden Dev</Link>
+        <Navbar.Brand href="/">Longden Dev</Navbar.Brand>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto">
+                <OptionLink to='/signin'>Sign In</OptionLink>
+            </Nav>
+        </Navbar.Collapse>
     </Navbar>
 );
 
