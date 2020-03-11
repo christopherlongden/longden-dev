@@ -11,6 +11,7 @@ const Header = () => (
         <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
                 <OptionLink to='/signin'>Sign In</OptionLink>
+                <OptionLink to='/signup'>Sign Up</OptionLink>
             </Nav>
         </Navbar.Collapse>
     </Navbar>

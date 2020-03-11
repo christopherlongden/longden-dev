@@ -5,6 +5,7 @@ import Header from './components/header/header.component';
 import HomePage from './pages/homepage/homepage.component';
 import GroupPage from './pages/grouppage/grouppage.component';
 import SignInPage from './pages/signinpage/signinpage.component';
+import SignUpPage from './pages/signuppage/signuppage.component';
 
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,6 +18,7 @@ function App() {
           <Route exact path='/' component={HomePage} />
           <Route exact path='/group/:id' component={GroupPage} />
           <Route exact path='/signin' component={SignInPage} />
+          <Route exact path='/signup' component={SignUpPage} />
         </Switch>
       
     </div>
