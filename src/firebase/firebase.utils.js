@@ -83,6 +83,9 @@ export const convertGroupSnapshotToMap = groups => {
         }
     });
 
+    // TODO: when I console log this it KEEPS getting called. That can not be right
+    // console.log("transformed groups: ", transformedGroups);
+
     return transformedGroups;
 }
 

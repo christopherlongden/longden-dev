@@ -1,9 +1,8 @@
 import React from 'react';
 import { Navbar, Nav } from "react-bootstrap";
 import  {OptionLink, LoggedInStatus } from './header.styles';
-import { auth } from '../../firebase/firebase.utils';
 
-const Header = ({ currentUser }) => {
+const Header = ({ currentUser, handleSignOut }) => {
     return (
         <Navbar bg="light" expand="sm">
         <Navbar.Brand>
@@ -16,7 +15,7 @@ const Header = ({ currentUser }) => {
                     currentUser ?
                         <>
                             <LoggedInStatus>Signed in as {currentUser.displayName}</LoggedInStatus>
-                            <OptionLink to='/' onClick={() => auth.signOut()}>Sign Out</OptionLink>
+                            <OptionLink to='/' onClick={handleSignOut}>Sign Out</OptionLink>
                         </>
                     :
                         <>

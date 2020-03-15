@@ -17,14 +17,18 @@ function App(props) {
 
     return function cleanup() {
       unsubscribeFromAuth();
-      setCurrentUser(null);
     }
   });
+
+  function handleSignOut() {
+    auth.signOut();
+    setCurrentUser(null);
+  }
   
   return (
     <div className="App">
-      <Header currentUser={currentUser} />
-      <Routes appProps={{currentUser, setCurrentUser}} />
+      <Header currentUser={currentUser} handleSignOut={handleSignOut} />
+      <Routes appProps={{currentUser}} />
     </div>
   )
 }

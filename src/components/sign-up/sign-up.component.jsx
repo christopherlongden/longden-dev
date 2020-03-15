@@ -8,7 +8,7 @@ class SignUp extends React.Component {
     render() {
       return (
         <SignUpContainer>
-
+          Sign up page
         </SignUpContainer>
       );
     }
