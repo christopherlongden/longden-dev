@@ -21,6 +21,8 @@ class GroupPage extends React.Component {
             newsItemBody: '',
             showAddNews: false
         }
+
+        console.log(this.props);
     }
 
     handleSubmit = async event => {
@@ -57,7 +59,8 @@ class GroupPage extends React.Component {
             });
         });
 
-        const newsRef = firestore.collection("news").where("groups", "array-contains", groupId)
+        // todo: https://firebase.google.com/docs/firestore/query-data/query-cursors
+        const newsRef = firestore.collection("news").where("groups", "array-contains", groupId).orderBy("created", "desc").limit(5);
         this.unsubscribeFromNewsSnapshot = newsRef.onSnapshot(snapshot => {
             this.setState ( { 
                 news: convertNewsSnapshotToMap(snapshot) 

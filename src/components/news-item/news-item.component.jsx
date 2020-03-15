@@ -3,7 +3,7 @@ import { NewsItemContainer } from './news-item.styles';
 
 const NewsItem = ({ news }) => {
     const { title, body, created } = news;
-    const dateTimeStamp = Date(created.seconds).toString();
+    const dateTimeStamp = new Date(created.toDate()).toDateString();
     return (
         <NewsItemContainer>
             <div className="title">{title}</div>

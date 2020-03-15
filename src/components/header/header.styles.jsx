@@ -7,4 +7,9 @@ export const OptionLink = styled(Link)`
   color:blue;
 `;
 
+export const LoggedInStatus = styled.span`
+  padding: 10px 15px;
+  color:black;
+`;
+
 export default OptionLink;

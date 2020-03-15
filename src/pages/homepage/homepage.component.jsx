@@ -13,8 +13,8 @@ import HomePageContainer from './homepage.styles'
 class HomePage extends React.Component {
     unsubscribeFromGroupSnapshot = null;
     
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             groups: [],
