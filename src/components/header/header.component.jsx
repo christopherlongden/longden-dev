@@ -23,7 +23,6 @@ const Header = ({ currentUser }) => {
                             <OptionLink to='/signin'>Sign In</OptionLink>
                             <OptionLink to='/signup'>Sign Up</OptionLink>
                         </>
-
                 }
             </Nav>
         </Navbar.Collapse>
