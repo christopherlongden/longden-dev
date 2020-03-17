@@ -45,17 +45,27 @@ function HomePage(props) {
         setShowAddGroup(!showAddGroup);
     }
 
+    // TODO: This still reloads every time groups.length changes which
+    // is unnecessary as it is a subscription and it does not need to reload
     useEffect(() => {
+        let unsubscribeFromGroupSnapshot = null;
+        
         const groupRef = firestore.collection('group').orderBy('name', 'asc');
 
-        const unsubscribeFromGroupSnapshot = groupRef.onSnapshot(snapshot => {
-            setGroups(convertGroupSnapshotToMap(snapshot));
-        });
+        try {
+            unsubscribeFromGroupSnapshot = groupRef.onSnapshot(snapshot => {
+                setGroups(convertGroupSnapshotToMap(snapshot));
+            });
+
+            console.log("loading home page ...");
+        } catch(e) {
+            console.log(e);
+        }
     
         return function cleanup() {
             unsubscribeFromGroupSnapshot();
         }
-    });
+    }, [groups.length]);
 
     return (
         <HomePageContainer>

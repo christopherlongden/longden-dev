@@ -40,29 +40,42 @@ function GroupPage(props) {
         setShowAddNews(!showAddNews);
     }
 
-    useEffect(() => {
-        const groupRef = firestore.collection('group').doc(group.id);
-        const unsubscribeFromGroupSnapshot = groupRef.onSnapshot(snapshot => {
-            const thisGroup = { id: group.id, ...snapshot.data() }
-            setGroup(thisGroup);
-        });
+    function editGroupProperties() {
+        
+    }
 
-        // todo: https://firebase.google.com/docs/firestore/query-data/query-cursors
-        const newsRef = firestore.collection("news").where("groups", "array-contains", group.id).orderBy("created", "desc").limit(5);
-        const unsubscribeFromNewsSnapshot = newsRef.onSnapshot(snapshot => {
-            setNews(convertNewsSnapshotToMap(snapshot));
-        });
+    useEffect(() => {
+        let unsubscribeFromGroupSnapshot = null;
+        let unsubscribeFromNewsSnapshot = null;
+
+        async function onLoad() {
+            const groupRef = firestore.collection('group').doc(group.id);
+            unsubscribeFromGroupSnapshot = groupRef.onSnapshot(snapshot => {
+                const thisGroup = { id: group.id, ...snapshot.data() }
+                setGroup(thisGroup);
+            });
+
+            // todo: https://firebase.google.com/docs/firestore/query-data/query-cursors
+            const newsRef = firestore.collection("news").where("groups", "array-contains", group.id).orderBy("created", "desc").limit(5);
+            unsubscribeFromNewsSnapshot = newsRef.onSnapshot(snapshot => {
+                setNews(convertNewsSnapshotToMap(snapshot));
+            });
+
+            console.log("loading group page ...");
+        }
     
+        onLoad();
+
         return function cleanup() {
             unsubscribeFromGroupSnapshot();
             unsubscribeFromNewsSnapshot();
         }
-    });
+    }, [group.id]);
 
 
     return (
         <GroupPageContainer>
-            <h3>Group Page: { group.name }</h3>
+            <h3>Group Page: { group.name } <input type="button" onClick={editGroupProperties} value="Edit Group"/></h3>
             
             {/* <h4>Members</h4>
 
