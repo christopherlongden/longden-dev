@@ -13,6 +13,11 @@ export const GroupPageContainer = styled.div`
         margin-top:20px;
         margin-bottom:20px;
     }
+
+    & .edit-button {
+        margin-left:20px;
+        font-size:small;
+    }
 `;
 
 export default GroupPageContainer;

@@ -32,7 +32,7 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     const snapShot = await userRef.get();
 
     if (!snapShot.exists) {
-        const {displayName, email} = userAuth;
+        const {displayName, email, photoURL} = userAuth;
         const createdAt = new Date();
 
         try {
@@ -40,6 +40,7 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
                 displayName,
                 email,
                 createdAt,
+                photoURL,
                 ...additionalData
             })
         } catch(error) {
@@ -83,23 +84,25 @@ export const convertGroupSnapshotToMap = groups => {
         }
     });
 
-    // TODO: when I console log this it KEEPS getting called. That can not be right
-    // console.log("transformed groups: ", transformedGroups);
+    console.log("transformed groups: ", transformedGroups);
 
     return transformedGroups;
 }
 
 export const convertNewsSnapshotToMap = news => {
     const transformedItems = news.docs.map(doc => {
-        const { title, body, created } = doc.data();
+        const { title, body, created, user } = doc.data();
 
         return {
             id: doc.id,
             title,
             body,
+            user: user[1],
             created
         }
     });
+
+    console.log("converted news to map");
 
     return transformedItems;
 }

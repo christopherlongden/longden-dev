@@ -57,7 +57,7 @@ function HomePage(props) {
                 setGroups(convertGroupSnapshotToMap(snapshot));
             });
 
-            console.log("loading home page ...");
+            console.log("got home page feed");
         } catch(e) {
             console.log(e);
         }

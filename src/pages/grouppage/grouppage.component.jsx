@@ -14,7 +14,12 @@ function GroupPage(props) {
     async function handleSubmit(event) {
         event.preventDefault();
 
-        const newNewsItem = { title: newsItemTitle, body: newsItemBody, groups: [ group.id ], created: new Date() };
+        const photoUrl = props.currentUser.photoURL ? props.currentUser.photoURL : '';
+
+        const userData = [ props.currentUser.id, props.currentUser.displayName, photoUrl ];
+        const newNewsItem = { title: newsItemTitle, body: newsItemBody, groups: [ group.id ], user: userData, created: new Date() };
+
+        console.log(newNewsItem);
         
         await addDocument('news', newNewsItem);
         setNewsItemTitle('');
@@ -45,6 +50,7 @@ function GroupPage(props) {
     }
 
     useEffect(() => {
+        
         let unsubscribeFromGroupSnapshot = null;
         let unsubscribeFromNewsSnapshot = null;
 
@@ -61,7 +67,7 @@ function GroupPage(props) {
                 setNews(convertNewsSnapshotToMap(snapshot));
             });
 
-            console.log("loading group page ...");
+            console.log("got group data feed");
         }
     
         onLoad();
@@ -75,7 +81,13 @@ function GroupPage(props) {
 
     return (
         <GroupPageContainer>
-            <h3>Group Page: { group.name } <input type="button" onClick={editGroupProperties} value="Edit Group"/></h3>
+            <h3>Group Page: { group.name } 
+            { props.currentUser ?
+                <input type="button" className="edit-button" onClick={editGroupProperties} value="Edit Group"/>
+                :
+                null
+            }
+            </h3>
             
             {/* <h4>Members</h4>
 
