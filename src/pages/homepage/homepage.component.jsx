@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GroupList from '../../components/group-list/group-list.component'
 import CreateGroup from '../../components/create-group/create-group.component'
+import { createUserObjectFromState } from '../../libs/common';
 
 import {
     firestore,
@@ -19,7 +20,11 @@ function HomePage(props) {
     async function handleSubmit(event) {
         event.preventDefault();
 
-        const newGroup = { name: newGroupName, imageUrl: newGroupImageUrl};
+        const newGroup = { 
+            name: newGroupName, 
+            imageUrl: newGroupImageUrl, 
+            creator: createUserObjectFromState(props.currentUser)
+        };
         
         await addDocument('group', newGroup);
         setNewGroupName('');
@@ -65,6 +70,7 @@ function HomePage(props) {
         return function cleanup() {
             unsubscribeFromGroupSnapshot();
         }
+
     }, [groups.length]);
 
     return (
@@ -79,12 +85,12 @@ function HomePage(props) {
                 :
                 null }
 
-            { showAddGroup ?
+            { showAddGroup && props.currentUser ?
                 <div>
                     <h3>Create Group</h3>
                     <CreateGroup 
                         groupName={newGroupName} 
-                        imageUrl={newGroupImageUrl} 
+                        imageUrl={newGroupImageUrl}
                         handleSubmit={handleSubmit} 
                         handleChange={handleChange} 
                         isFormValid={isFormValid}

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const CreateGroupContainer = styled.div`
-    width:200px;
+    width:350px;
 `;
 
 export default CreateGroupContainer;

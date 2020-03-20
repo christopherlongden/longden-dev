@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/storage';
 import 'firebase/auth';
 
 const config = {
@@ -14,10 +15,12 @@ const config = {
 }
 
 firebase.initializeApp(config);
+
 //firebase.analytics();
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
+export const storage = firebase.storage();
 
 const provider = new firebase.auth.GoogleAuthProvider();
 provider.setCustomParameters({ prompt: 'select_account'} );
@@ -71,6 +74,12 @@ export const addDocument = async (collectionKey, obj) => {
 
 export const getDocument = async (collectionKey, docId) => {
     // group => group.groups.find(x => x.id === collectionUrlParam)
+}
+
+export const listFiles = async (path) => {
+    let icons = [];
+
+    return icons;
 }
 
 export const convertGroupSnapshotToMap = groups => {

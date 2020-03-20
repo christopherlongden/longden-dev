@@ -3,6 +3,7 @@ import GroupPageContainer from './grouppage.styles'
 import { firestore, addDocument, convertNewsSnapshotToMap } from '../../firebase/firebase.utils.js';
 import NewsItems from '../../components/news-list/news-list.component';
 import AddNewsItem from '../../components/add-news-item/add-news-item.component';
+import { createUserObjectFromState } from '../../libs/common';
 
 function GroupPage(props) {
     const [news, setNews] = useState([]);
@@ -14,10 +15,13 @@ function GroupPage(props) {
     async function handleSubmit(event) {
         event.preventDefault();
 
-        const photoUrl = props.currentUser.photoURL ? props.currentUser.photoURL : '';
-
-        const userData = [ props.currentUser.id, props.currentUser.displayName, photoUrl ];
-        const newNewsItem = { title: newsItemTitle, body: newsItemBody, groups: [ group.id ], user: userData, created: new Date() };
+        const newNewsItem = { 
+            title: newsItemTitle, 
+            body: newsItemBody, 
+            groups: [ group.id ], 
+            user: createUserObjectFromState(props.currentUser),
+            created: new Date() 
+        };
 
         console.log(newNewsItem);
         
@@ -105,7 +109,7 @@ function GroupPage(props) {
                 null
             }
 
-            { showAddNews ?
+            { showAddNews && props.currentUser ?
                 <div>
                     <h3>New News Post</h3>
                     <AddNewsItem
