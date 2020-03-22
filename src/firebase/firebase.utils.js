@@ -76,6 +76,11 @@ export const getDocument = async (collectionKey, docId) => {
     // group => group.groups.find(x => x.id === collectionUrlParam)
 }
 
+export const deleteDocument = async (collection, documentId) => {
+    const docRef = await firestore.doc(`${collection}/${documentId}`);
+    return docRef.delete();
+}
+
 export const listFiles = async (path) => {
     let icons = [];
 

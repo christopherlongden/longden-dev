@@ -18,6 +18,10 @@ export const GroupPageContainer = styled.div`
         margin-left:20px;
         font-size:small;
     }
+
+    & span {
+        margin-left:15px;
+    }
 `;
 
 export default GroupPageContainer;

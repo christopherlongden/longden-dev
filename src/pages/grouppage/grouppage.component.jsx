@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GroupPageContainer from './grouppage.styles'
-import { firestore, addDocument, convertNewsSnapshotToMap } from '../../firebase/firebase.utils.js';
+import { useHistory } from "react-router-dom";
+import { firestore, addDocument, convertNewsSnapshotToMap, deleteDocument } from '../../firebase/firebase.utils.js';
 import NewsItems from '../../components/news-list/news-list.component';
 import AddNewsItem from '../../components/add-news-item/add-news-item.component';
 import { createUserObjectFromState } from '../../libs/common';
@@ -11,6 +12,9 @@ function GroupPage(props) {
     const [newsItemTitle, setNewsItemTitle] = useState('');
     const [newsItemBody, setNewsItemBody] = useState('');
     const [showAddNews, setShowAddNews] = useState(false);
+    const [editing, setEditing] = useState(false);
+    const [groupName, setGroupName] = useState('');
+    let history = useHistory();
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -31,8 +35,15 @@ function GroupPage(props) {
         setShowAddNews(false);
     }
 
+    async function handleUpdateGroup(event) {
+        console.log("updating group name to: ", groupName);
+        const groupRef = await firestore.collection('group').doc(group.id);
+        groupRef.update( { name: groupName } )
+        setEditing(false);
+    }
+
     function isFormValid() {
-        return newsItemTitle.length > 10 && newsItemBody.length > 10;
+        return newsItemTitle.length > 2 && newsItemBody.length > 10;
     }
 
     function handleChange(event) {
@@ -43,6 +54,9 @@ function GroupPage(props) {
         if (name === 'newsItemBody') {
             setNewsItemBody(value);
         }
+        if (name === 'groupName') {
+            setGroupName(value);
+        }
     };
 
     function toggleNewPostVisbility() {
@@ -50,7 +64,15 @@ function GroupPage(props) {
     }
 
     function editGroupProperties() {
-        
+        setEditing(true);
+    }
+
+    async function deleteGroup() {
+        let confirmDelete = window.confirm("Are you sure you want to delete this group?")
+        if (confirmDelete) {
+            await deleteDocument('group', group.id);
+            history.push("/");
+        }
     }
 
     useEffect(() => {
@@ -63,6 +85,7 @@ function GroupPage(props) {
             unsubscribeFromGroupSnapshot = groupRef.onSnapshot(snapshot => {
                 const thisGroup = { id: group.id, ...snapshot.data() }
                 setGroup(thisGroup);
+                setGroupName(thisGroup.name);
             });
 
             // todo: https://firebase.google.com/docs/firestore/query-data/query-cursors
@@ -70,6 +93,8 @@ function GroupPage(props) {
             unsubscribeFromNewsSnapshot = newsRef.onSnapshot(snapshot => {
                 setNews(convertNewsSnapshotToMap(snapshot));
             });
+
+            
 
             console.log("got group data feed");
         }
@@ -85,9 +110,25 @@ function GroupPage(props) {
 
     return (
         <GroupPageContainer>
-            <h3>Group Page: { group.name } 
-            { props.currentUser ?
-                <input type="button" className="edit-button" onClick={editGroupProperties} value="Edit Group"/>
+            <h3>
+            Group Page: 
+            {
+                editing ?
+                    <>
+                        <span>
+                            <input type="text" value={groupName} onChange={handleChange} name="groupName"/>
+                            <input type="button" className="edit-button" value="Update Name" onClick={handleUpdateGroup}/>
+                        </span>
+                    </>
+                :
+                <span>{groupName}</span>
+            }
+
+            { props.currentUser && !editing ?
+                <>
+                    <input type="button" className="edit-button" onClick={editGroupProperties} name="editGroup" value="Edit Group"/>
+                    <input type="button" className="edit-button" onClick={deleteGroup} name="deleteGroup" value="Delete Group"/>
+                </>
                 :
                 null
             }
