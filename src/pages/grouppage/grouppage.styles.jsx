@@ -16,6 +16,11 @@ export const GroupPageContainer = styled.div`
 
     & .edit-button {
         margin-left:20px;
+        font-size:x-small;
+    }
+
+    & .join-button {
+        margin-left:20px;
         font-size:small;
     }
 

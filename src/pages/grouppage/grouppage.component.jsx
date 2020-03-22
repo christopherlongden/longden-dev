@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import GroupPageContainer from './grouppage.styles'
 import { useHistory } from "react-router-dom";
-import { firestore, addDocument, convertNewsSnapshotToMap, deleteDocument } from '../../firebase/firebase.utils.js';
+import { firestore, addDocument, convertNewsSnapshotToMap, convertMembersSnapshotToMap, deleteDocument } from '../../firebase/firebase.utils.js';
 import NewsItems from '../../components/news-list/news-list.component';
+import MemberList from '../../components/member-list/member-list.component';
 import AddNewsItem from '../../components/add-news-item/add-news-item.component';
+import GroupMemberActions from '../../components/group-member-actions/group-member-actions';
 import { createUserObjectFromState } from '../../libs/common';
 
 function GroupPage(props) {
     const [news, setNews] = useState([]);
+    const [members, setMembers] = useState([]);
     const [group, setGroup] = useState({ name: null, id: props.match.params.id });
     const [newsItemTitle, setNewsItemTitle] = useState('');
     const [newsItemBody, setNewsItemBody] = useState('');
@@ -75,17 +78,33 @@ function GroupPage(props) {
         }
     }
 
+    async function joinGroup() {
+        const groupRef = await firestore.collection('group').doc(group.id).collection('members').doc(props.currentUser.id);
+        const docRef = await groupRef.get();
+        if (docRef.exists) {
+            console.log("member exists in group");
+        } else {
+            groupRef.set( { created: new Date() }, {merge: true});
+        }
+    }
+
+    async function leaveGroup() {
+        const docRef = await firestore.collection('group').doc(group.id).collection('members').doc(props.currentUser.id);
+        return docRef.delete();
+    }
+
     useEffect(() => {
         
         let unsubscribeFromGroupSnapshot = null;
         let unsubscribeFromNewsSnapshot = null;
+        let unsubscribeFromMemberSnapshot = null;
 
         async function onLoad() {
             const groupRef = firestore.collection('group').doc(group.id);
             unsubscribeFromGroupSnapshot = groupRef.onSnapshot(snapshot => {
                 const thisGroup = { id: group.id, ...snapshot.data() }
                 setGroup(thisGroup);
-                setGroupName(thisGroup.name);
+                setGroupName(thisGroup.name);                
             });
 
             // todo: https://firebase.google.com/docs/firestore/query-data/query-cursors
@@ -94,7 +113,10 @@ function GroupPage(props) {
                 setNews(convertNewsSnapshotToMap(snapshot));
             });
 
-            
+            const membersRef = firestore.collection('group').doc(group.id).collection('members');
+            unsubscribeFromMemberSnapshot = membersRef.onSnapshot(snapshot => {
+                setMembers(convertMembersSnapshotToMap(snapshot));
+            });
 
             console.log("got group data feed");
         }
@@ -104,6 +126,7 @@ function GroupPage(props) {
         return function cleanup() {
             unsubscribeFromGroupSnapshot();
             unsubscribeFromNewsSnapshot();
+            unsubscribeFromMemberSnapshot();
         }
     }, [group.id]);
 
@@ -133,10 +156,14 @@ function GroupPage(props) {
                 null
             }
             </h3>
-            
-            {/* <h4>Members</h4>
 
-            <h4>Chat</h4> */}
+            <h4>
+                Members
+            </h4>
+
+            <GroupMemberActions joinGroup={joinGroup} leaveGroup={leaveGroup} members={members} currentUser={props.currentUser} />
+
+            <MemberList members={members}/>
 
             <h4>News</h4>
 

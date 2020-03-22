@@ -22,12 +22,14 @@ const CreateGroup = (props) => {
                             <option key={item.fullPath}>{item.fullPath}</option>
                         ))}
                     </select>
+                    <div>
                     {
                         previewImageUrl ?
                             <img alt="preview url" src={previewImageUrl}/>
                         :
                             null
                     }
+                    </div>
                 </Form.Group>
                 <Button variant="primary" type="submit" disabled={!isFormValid()}>
                     Submit

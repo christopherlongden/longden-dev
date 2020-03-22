@@ -67,24 +67,13 @@ export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => 
 
 export const addDocument = async (collectionKey, obj) => {
     const collectionRef = firestore.collection(collectionKey);
-
     const newDocRef = collectionRef.doc();
     newDocRef.set(obj);
-}
-
-export const getDocument = async (collectionKey, docId) => {
-    // group => group.groups.find(x => x.id === collectionUrlParam)
 }
 
 export const deleteDocument = async (collection, documentId) => {
     const docRef = await firestore.doc(`${collection}/${documentId}`);
     return docRef.delete();
-}
-
-export const listFiles = async (path) => {
-    let icons = [];
-
-    return icons;
 }
 
 export const convertGroupSnapshotToMap = groups => {
@@ -121,6 +110,19 @@ export const convertNewsSnapshotToMap = news => {
     return transformedItems;
 }
 
+export const convertMembersSnapshotToMap = members => {
+    const transformedItems = members.docs.map(doc => {
+        const { created } = doc.data();
 
+        return {
+            id: doc.id,
+            created
+        }
+    });
+
+    console.log("converted members to map");
+
+    return transformedItems;
+}
 
 export default firebase;
