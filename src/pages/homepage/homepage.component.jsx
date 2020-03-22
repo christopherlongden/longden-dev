@@ -6,7 +6,8 @@ import { createUserObjectFromState } from '../../libs/common';
 import {
     firestore,
     addDocument,
-    convertGroupSnapshotToMap
+    convertGroupSnapshotToMap,
+    storage
   } from '../../firebase/firebase.utils.js';
 
 import HomePageContainer from './homepage.styles'
@@ -16,33 +17,42 @@ function HomePage(props) {
     const [showAddGroup, setShowAddGroup] = useState(false);
     const [newGroupName, setNewGroupName] = useState('');
     const [newGroupImageUrl, setNewGroupImageUrl] = useState('');
+    const [iconReferences, setIconReferences] = useState([]);
+    const [previewImageUrl, setPreviewImageUrl] = useState('');
 
     async function handleSubmit(event) {
         event.preventDefault();
 
         const newGroup = { 
             name: newGroupName, 
-            imageUrl: newGroupImageUrl, 
+            imageUrl: previewImageUrl, 
             creator: createUserObjectFromState(props.currentUser)
         };
         
         await addDocument('group', newGroup);
         setNewGroupName('');
         setNewGroupImageUrl('');
+        setPreviewImageUrl('');
         setShowAddGroup(false);
     }
 
     function isFormValid() {
-        return newGroupName.length > 4 && newGroupImageUrl.length > 5;
+        return newGroupName.length > 4 && newGroupImageUrl.length > 0;
     }
 
-    function handleChange(event) {
+    async function handleChange(event) {
         const { name, value } = event.target;
         if (name === 'newGroupName') {
             setNewGroupName(value);
         }
         if (name === 'newGroupImageUrl') {
             setNewGroupImageUrl(value);
+
+            const storageRef = storage.ref();
+            const listRef = storageRef.child(value);
+            const downloadUrl = await listRef.getDownloadURL();
+            console.log("download: ", downloadUrl);
+            setPreviewImageUrl(downloadUrl);
         }
     };
 
@@ -50,8 +60,8 @@ function HomePage(props) {
         setShowAddGroup(!showAddGroup);
     }
 
-    // TODO: This still reloads every time groups.length changes which
-    // is unnecessary as it is a subscription and it does not need to reload
+    // TODO: Using showAddGroup to prevent this running multiple times but it
+    // does not seem like the right approach
     useEffect(() => {
         let unsubscribeFromGroupSnapshot = null;
         
@@ -66,12 +76,30 @@ function HomePage(props) {
         } catch(e) {
             console.log(e);
         }
+
+        onLoad();
     
         return function cleanup() {
             unsubscribeFromGroupSnapshot();
         }
 
-    }, [groups.length]);
+    }, [showAddGroup]);
+
+    async function onLoad() {
+        const path = 'icons';
+        const storageRef = storage.ref();
+        const listRef = storageRef.child(path);
+        let files = await listRef.listAll();
+
+        let icons = [];
+        files.items.forEach(obj => {
+            icons.push(obj);
+        });
+
+        console.log("loaded item references");
+
+        setIconReferences(icons);
+    }
 
     return (
         <HomePageContainer>
@@ -91,6 +119,8 @@ function HomePage(props) {
                     <CreateGroup 
                         groupName={newGroupName} 
                         imageUrl={newGroupImageUrl}
+                        previewImageUrl={previewImageUrl}
+                        icons={iconReferences}
                         handleSubmit={handleSubmit} 
                         handleChange={handleChange} 
                         isFormValid={isFormValid}
