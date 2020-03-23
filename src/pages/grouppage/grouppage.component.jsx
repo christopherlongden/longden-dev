@@ -84,7 +84,7 @@ function GroupPage(props) {
         if (docRef.exists) {
             console.log("member exists in group");
         } else {
-            groupRef.set( { created: new Date() }, {merge: true});
+            groupRef.set( { joinedGroup: new Date(), ...props.currentUser }, {merge: true});
         }
     }
 
@@ -158,12 +158,14 @@ function GroupPage(props) {
             </h3>
 
             <h4>
-                Members
+                Members ({members.length})
             </h4>
 
+            <MemberList members={members}/>
+            
             <GroupMemberActions joinGroup={joinGroup} leaveGroup={leaveGroup} members={members} currentUser={props.currentUser} />
 
-            <MemberList members={members}/>
+            
 
             <h4>News</h4>
 

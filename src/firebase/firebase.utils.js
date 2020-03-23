@@ -112,11 +112,13 @@ export const convertNewsSnapshotToMap = news => {
 
 export const convertMembersSnapshotToMap = members => {
     const transformedItems = members.docs.map(doc => {
-        const { created } = doc.data();
+        const { joinedGroup, displayName, photoURL } = doc.data();
 
         return {
             id: doc.id,
-            created
+            joinedGroup,
+            displayName,
+            photoURL
         }
     });
 

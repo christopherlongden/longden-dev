@@ -1,15 +1,23 @@
 import React from 'react';
-import { MemberItemContainer } from './member-item.styles';
+import { MemberItemContainer, MemberLink } from './member-item.styles';
 
 const MemberItem = ({ member }) => {
-    const { id, created } = member;
-    const dateTimeStamp = new Date(created.toDate()).toDateString();
+    const { displayName, photoURL, id } = member;
+    const location = "/user/" + id;
     return (
         <MemberItemContainer>
-            <div className="id">{id}</div>
-            <div className="created">Joined: {dateTimeStamp}</div>
+            <MemberLink to={location}>
+                <span className="displayName">{displayName}</span>
+                {
+                    photoURL ? 
+                    <span><img className="photoURL" alt="user" src={photoURL}/></span>
+                    :
+                    <span><img className="photoURL" alt="user" src="https://img.icons8.com/ultraviolet/40/000000/popeye.png"/></span>
+                }
+            </MemberLink>
         </MemberItemContainer>
     );
 }
 
 export default MemberItem;
+
