@@ -87,18 +87,24 @@ function HomePage(props) {
 
     async function onLoad() {
         const path = 'icons';
-        const storageRef = storage.ref();
-        const listRef = storageRef.child(path);
-        let files = await listRef.listAll();
 
-        let icons = [];
-        files.items.forEach(obj => {
-            icons.push(obj);
-        });
+        try {
+            const storageRef = storage.ref();
+            const listRef = storageRef.child(path);
+            let files = await listRef.listAll();
+    
+            let icons = [];
+            files.items.forEach(obj => {
+                icons.push(obj);
+            });
+    
+            console.log("loaded item references");
+    
+            setIconReferences(icons);
+        } catch(error) {
+            console.log(error.message);
+        }
 
-        console.log("loaded item references");
-
-        setIconReferences(icons);
     }
 
     return (

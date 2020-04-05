@@ -165,8 +165,6 @@ function GroupPage(props) {
             
             <GroupMemberActions joinGroup={joinGroup} leaveGroup={leaveGroup} members={members} currentUser={props.currentUser} />
 
-            
-
             <h4>News</h4>
 
             <NewsItems news={news}/>
