@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import GroupPageContainer from './grouppage.styles'
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { firestore, addDocument, convertNewsSnapshotToMap, convertMembersSnapshotToMap, deleteDocument } from '../../firebase/firebase.utils.js';
 import NewsItems from '../../components/news-list/news-list.component';
 import MemberList from '../../components/member-list/member-list.component';
@@ -18,6 +18,7 @@ function GroupPage(props) {
     const [editing, setEditing] = useState(false);
     const [groupName, setGroupName] = useState('');
     let history = useHistory();
+    const chatLink = "/group/" + props.match.params.id + "/chat";
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -157,13 +158,23 @@ function GroupPage(props) {
             }
             </h3>
 
+            <h5>
+                <Link to={chatLink}>Chat</Link>
+            </h5>
+
             <h4>
                 Members ({members.length})
             </h4>
 
             <MemberList members={members}/>
+
+            { props.currentUser ?
+                <GroupMemberActions joinGroup={joinGroup} leaveGroup={leaveGroup} members={members} currentUser={props.currentUser} />
+                :
+                null
+            }
             
-            <GroupMemberActions joinGroup={joinGroup} leaveGroup={leaveGroup} members={members} currentUser={props.currentUser} />
+            
 
             <h4>News</h4>
 

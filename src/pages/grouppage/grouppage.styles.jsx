@@ -9,6 +9,10 @@ export const GroupPageContainer = styled.div`
         margin-top:20px;
     }
 
+    & h4 {
+        margin-top:20px;
+    }
+
     & .toggle-box {
         margin-top:20px;
         margin-bottom:20px;
